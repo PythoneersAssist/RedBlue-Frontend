@@ -1,0 +1,80 @@
+/* Fullscreen layout */
+.homepage-container {
+  height: 100vh;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card container */
+.card {
+  background-color: #1e1e2f;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+}
+
+/* Title */
+.title {
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.title .red {
+  color: #f43f5e;
+}
+
+.title .plus {
+  color: #a855f7;
+}
+
+.title .blue {
+  color: #3b82f6;
+}
+
+/* Buttons */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.create-btn {
+  background-color: #7e22ce;
+}
+
+.create-btn:hover {
+  background-color: #9333ea;
+}
+
+.join-btn {
+  background-color: #6b21a8;
+}
+
+.join-btn:hover {
+  background-color: #7e22ce;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  margin: 10px 0;
+  border-radius: 12px;
+  text-align: center;
+  border: none;
+}

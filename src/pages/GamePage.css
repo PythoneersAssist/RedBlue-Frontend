@@ -1,0 +1,138 @@
+.game-container {
+    height: 100vh;
+    background-color: black;
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .scoreboard {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 400px;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .round {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #a855f7;
+  }
+  
+  .choices {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .red-btn, .blue-btn {
+    font-size: 20px;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  
+  .red-btn {
+    background-color: #dc2626;
+    color: white;
+  }
+  
+  .red-btn:hover {
+    background-color: #b91c1c;
+  }
+  
+  .blue-btn {
+    background-color: #2563eb;
+    color: white;
+  }
+  
+  .blue-btn:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .result {
+    text-align: center;
+    max-width: 500px;
+  }
+  
+  .next-btn {
+    margin-top: 20px;
+    background-color: #7e22ce;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .next-btn:hover {
+    background-color: #9333ea;
+  }
+  .discussion-box, .chat-box {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  
+  .discussion-box,
+.chat-box {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.discussion-box button,
+.chat-box button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #7e22ce;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.discussion-box button:hover,
+.chat-box button:hover {
+  background-color: #9333ea;
+}
+
+.end-screen {
+    background-color: #1e1e2f;
+    padding: 30px;
+    border-radius: 20px;
+    margin-top: 30px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+    color: white;
+  }
+  
+  .end-screen h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #a855f7;
+  }
+  
+  .end-screen p {
+    font-size: 20px;
+    margin: 10px 0;
+  }
+  
+    
