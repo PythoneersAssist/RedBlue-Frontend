@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import RulesModal from './RulesModal';
+import axios from 'axios';
+import './HomePage.css';
 
 function HomePage() {
-  const [playerName, setPlayerName] = useState('');
-  const [gameCode, setGameCode] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [gameCode, setGameCode] = useState('');
+  const [playerName, setPlayerName] = useState('');
 
   const handleCreateGame = async () => {
     if (!playerName.trim()) {
@@ -16,40 +15,39 @@ function HomePage() {
     }
 
     try {
-      const res = await fetch('/api/create', {
-        method: 'POST',
-      });
+      const response = await axios.post('http://localhost:8000/api/create');
+      const gameCode = response.data.code;
 
-      const data = await res.json();
-      const code = data.code || data.game_code;
-      if (!code) throw new Error('Invalid response: no game code');
-
-      navigate(`/game?code=${encodeURIComponent(code)}&name=${encodeURIComponent(playerName)}`);
-    } catch (err) {
-      console.error(err);
-      alert('Error creating game!');
+      navigate(`/game?code=${gameCode}&player_name=${encodeURIComponent(playerName)}`);
+    } catch (error) {
+      console.error('Failed to create game:', error);
+      alert('Could not create game');
     }
   };
 
   const handleJoinGame = () => {
-    if (!playerName.trim() || !gameCode.trim()) {
-      alert('Please enter your name and the game code!');
+    if (!gameCode.trim() || !playerName.trim()) {
+      alert('Please enter both your name and the game code');
       return;
     }
 
-    navigate(`/game?code=${encodeURIComponent(gameCode)}&name=${encodeURIComponent(playerName)}`);
+    // Backend-ul nu are /join, așa că doar navigăm
+    navigate(`/game?code=${gameCode}&player_name=${encodeURIComponent(playerName)}`);
   };
 
   return (
     <div className="homepage-container">
       <div className="card">
         <h1 className="title">
-          <span className="red">RED</span> <span className="plus">+</span> <span className="blue">BLUE</span>
+          <span className="red">RED</span>{' '}
+          <span className="plus">+</span>{' '}
+          <span className="blue">BLUE</span>
         </h1>
 
         <input
+          type="text"
           className="input"
-          placeholder="Your Name"
+          placeholder="Enter your name"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
         />
@@ -59,6 +57,7 @@ function HomePage() {
         </button>
 
         <input
+          type="text"
           className="input"
           placeholder="Enter Game Code"
           value={gameCode}
@@ -68,13 +67,7 @@ function HomePage() {
         <button className="btn join-btn" onClick={handleJoinGame}>
           🎮 Join Game
         </button>
-
-        <button className="btn create-btn" onClick={() => setShowModal(true)}>
-          📘 How to Play?
-        </button>
       </div>
-
-      {showModal && <RulesModal onClose={() => setShowModal(false)} />}
     </div>
   );
 }
