@@ -78,3 +78,17 @@
   text-align: center;
   border: none;
 }
+
+.rules-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.rules-btn:hover {
+  background-color: #1976d2;
+}

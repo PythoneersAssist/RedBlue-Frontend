@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './HomePage.css';
+import RulesModal from './RulesModal';
 
 function HomePage() {
   const navigate = useNavigate();
   const [gameCode, setGameCode] = useState('');
   const [playerName, setPlayerName] = useState('');
+  const [showRules, setShowRules] = useState(false);
 
   const handleCreateGame = async () => {
     if (!playerName.trim()) {
@@ -53,7 +55,7 @@ function HomePage() {
         />
 
         <button className="btn create-btn" onClick={handleCreateGame}>
-          🚀 Create Game
+          Create Game
         </button>
 
         <input
@@ -65,8 +67,13 @@ function HomePage() {
         />
 
         <button className="btn join-btn" onClick={handleJoinGame}>
-          🎮 Join Game
+          Join Game
         </button>
+
+        <button className="rules-btn" onClick={() => setShowRules(true)}>
+          How to Play?
+        </button>
+        {showRules && <RulesModal onClose={() => setShowRules(false)} />}
       </div>
     </div>
   );
