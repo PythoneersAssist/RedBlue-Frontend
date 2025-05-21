@@ -29,6 +29,7 @@ function GamePage() {
   const [opponentWantsChat, setOpponentWantsChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [showEndScreen, setShowEndScreen] = useState(false);
+  const [lastResult, setLastResult] = useState('');
 
   const gameSocketRef = useRef(null);
   const chatSocketRef = useRef(null);
@@ -64,38 +65,84 @@ function GamePage() {
         const data = JSON.parse(event.data);
         console.log('📥 WebSocket message:', data);
 
+        if (data.event === 'game_reconnection_token') {
+          localStorage.setItem('reconnection_token', data.reconnection_token);
+        } 
         if (data.event === 'game_player_join') {
           if (data.player_name !== playerName) {
             setOpponentName(data.player_name);
           }
         }
-        if (data.event === 'game_reconnection_token') {
-          localStorage.setItem('reconnection_token', data.reconnection_token);
-        } else if (data.event === 'game_round_over') {
+        if (data.event === 'game_round_over') {
           const index = data.index;
           const opponentIndex = index === 0 ? 1 : 0;
 
           setMyIndex(index);
           setPlayerScore(data.score[index]);
           setOpponentScore(data.score[opponentIndex]);
-
           setMyName(playerName);
           setOpponentName((prev) => prev || `Player ${opponentIndex + 1}`);
 
-          setResult(`You chose ${data.choice[index]} and opponent chose ${data.choice[opponentIndex]}`);
+          const colorNames = ['🔴 RED', '🔵 BLUE'];
+
+          setResult(`You chose ${colorNames[data.choice[index]]} and opponent chose ${colorNames[data.choice[opponentIndex]]}`);
           setWaitingForOpponent(false);
           setChoiceMade(true);
 
-          setTimeout(() => nextRound(), 4000);
-        } else if (data.event === 'game_over') {
+          setTimeout(() => {
+            if (round < 10) {
+              setRound(prev => prev + 1);
+              setResult('');
+              setChoiceMade(false);
+              setWaitingForOpponent(false);
+            } else {
+              setShowEndScreen(true);
+            }
+          }, 4000);
+        }
+        if (data.event === 'game_over') {
           setShowEndScreen(true);
-        } else if (data.event === 'game_round_wfp') {
+        }
+        if (data.event === 'game_round_wfp') {
           setWaitingForOpponent(true);
           setChoiceMade(true);
           setResult('Waiting for the other opponent to choose...');
         }
-      };
+        if (data.event === 'chat_possibilty') {
+          setShowDiscussionPrompt(true);
+          setResult('');
+        }
+        if (data.event === 'chat_start') {
+          setShowChat(true);
 
+          // Închide vechiul chatSocket dacă e deja deschis
+          if (chatSocketRef.current && chatSocketRef.current.readyState <= 1) {
+            chatSocketRef.current.close();
+          }
+
+          const encodedName = encodeURIComponent(playerName);
+          chatSocketRef.current = new WebSocket(`ws://localhost:8000/api/chat?player_name=${encodedName}`);
+
+          chatSocketRef.current.onopen = () => {
+            console.log('💬 Chat WebSocket connected');
+          };
+
+          chatSocketRef.current.onmessage = (event) => {
+            const chatData = JSON.parse(event.data);
+            setChatMessages(prev => [...prev, { from: chatData.from, message: chatData.message }]);
+          };
+
+          chatSocketRef.current.onclose = () => {
+            console.log('❌ Chat WebSocket closed');
+          };
+        }
+        if (data.event === 'chat_declined') {
+          setResult("❌ Chat request declined.");
+          setChoiceMade(false);
+          setWaitingForOpponent(false);
+          setShowDiscussionPrompt(false);
+        }
+      };
       socket.onclose = () => console.log('🛑 Game WebSocket closed');
     }, 300);
 
@@ -150,6 +197,7 @@ function GamePage() {
     }
   };
 
+
   const nextRoundAfterChat = () => {
     if (round < 10) {
       setRound(prev => prev + 1);
@@ -165,64 +213,68 @@ function GamePage() {
   };
 
   const handleDiscussionChoice = (playerChoice) => {
-    const opponentChoice = Math.random() < 0.5;
-    setPlayerWantsChat(playerChoice);
-    setOpponentWantsChat(opponentChoice);
+    const payload = {
+      event: playerChoice ? "chat_accept" : "chat_decline"
+    };
+
+    console.log("📤 Sending chat decision:", payload);
+    gameSocketRef.current.send(JSON.stringify(payload));
+
     setShowDiscussionPrompt(false);
-
-    if (playerChoice && opponentChoice) {
-      setShowChat(true);
-      setChoiceMade(true);
-
-      const chatSocket = new WebSocket(`ws://localhost:8000/api/chat/${gameCode}?player_name=${playerName}`);
-      chatSocketRef.current = chatSocket;
-
-      chatSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.event === "chat_message") {
-          setChatMessages(prev => [...prev, { from: data.player, message: data.content }]);
-        }
-      };
-
-      chatSocket.onclose = () => console.log('🛑 Chat WebSocket closed');
-      return;
-    }
-
-    setResult(`Opponent chose ${opponentChoice ? '✅ YES' : '❌ NO'}. No discussion.`);
-    setTimeout(() => {
-      setShowChat(false);
-      nextRoundAfterChat();
-    }, 2000);
+    setChoiceMade(true);
+    setWaitingForOpponent(true);
+    setResult("Waiting for opponent response...");
   };
 
   const sendMessage = () => {
-    if (chatSocketRef.current && message.trim()) {
-      chatSocketRef.current.send(JSON.stringify({
-        event: "chat_message",
-        content: message
-      }));
+    if (
+      message.trim() &&
+      chatSocketRef.current &&
+      chatSocketRef.current.readyState === WebSocket.OPEN
+    ) {
+      chatSocketRef.current.send(JSON.stringify({ message }));
       setChatMessages(prev => [...prev, { from: playerName, message }]);
       setMessage('');
+    }
+    if (!showChat) {
+      console.warn("⛔ You can't send messages, chat is closed.");
+      return;
     }
   };
 
   const closeChat = () => {
-    chatSocketRef.current?.close();
+    if (chatSocketRef.current && chatSocketRef.current.readyState === WebSocket.OPEN) {
+      chatSocketRef.current.close();
+    }
+    chatSocketRef.current = null;
     setShowChat(false);
-    nextRoundAfterChat();
   };
 
   return (
     <div className="game-container">
+      <div className="game-code-banner">
+        Game Code: <span className="game-code" onClick={() => {
+          navigator.clipboard.writeText(gameCode);
+          alert("Copied!");
+        }}>{gameCode}</span>
+      </div>
       <div className="scoreboard">
         <div>{myName || 'You'}: {playerScore}</div>
         <div>{opponentName || 'Waiting...'}: {opponentScore}</div>
       </div>
-      {!showEndScreen && (
+          {!showEndScreen && (
         <>
           <h2 className="round">Round {round} / 10</h2>
 
-          {!choiceMade ? (
+          {showDiscussionPrompt ? (
+            <div className="discussion-prompt">
+              <p>🤝 Do you want to discuss with your opponent?</p>
+              <div className="discussion-buttons">
+                <button className="yes-btn" onClick={() => handleDiscussionChoice(true)}>✅ Yes</button>
+                <button className="no-btn" onClick={() => handleDiscussionChoice(false)}>❌ No</button>
+              </div>
+            </div>
+          ) : !choiceMade ? (
             <div className="choices">
               <button className="red-btn" onClick={() => handleChoice('RED')}>🔴 RED</button>
               <button className="blue-btn" onClick={() => handleChoice('BLUE')}>🔵 BLUE</button>
@@ -230,14 +282,6 @@ function GamePage() {
           ) : (
             <div className="result">
               <p>{result}</p>
-            </div>
-          )}
-
-          {showDiscussionPrompt && (
-            <div className="discussion-box">
-              <p>🗣️ Do you want to discuss with your opponent?</p>
-              <button onClick={() => handleDiscussionChoice(true)}>✅ Yes</button>
-              <button onClick={() => handleDiscussionChoice(false)}>❌ No</button>
             </div>
           )}
 
@@ -260,12 +304,11 @@ function GamePage() {
           )}
         </>
       )}
-
       {showEndScreen && (
         <div className="end-screen">
           <h2>🏁 Final Results</h2>
-          <p>🧑 You: {playerScore} {playerScore > opponentScore ? '🏆 Winner!' : '❌ Lost'}</p>
-          <p>👤 Opponent: {opponentScore} {opponentScore > playerScore ? '🏆 Winner!' : '❌ Lost'}</p>
+          <p>You: {playerScore} {playerScore > 0 ? '🏆 Winner!' : '❌ Lost'}</p>
+          <p>Opponent: {opponentScore} {opponentScore > 0 ? '🏆 Winner!' : '❌ Lost'}</p>
           <button className="next-btn" onClick={() => window.location.href = '/'}>
             🏠 Back to Home
           </button>
