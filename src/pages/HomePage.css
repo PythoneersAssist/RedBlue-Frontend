@@ -70,13 +70,20 @@
 
 /* Input */
 .input {
+  color: white;
   width: 100%;
   padding: 14px;
   font-size: 16px;
   margin: 10px 0;
   border-radius: 12px;
+  border-color: white;
   text-align: center;
   border: none;
+}
+
+.input::placeholder {
+  color: #bbb;  
+  opacity: 0.5;           
 }
 
 .rules-btn {
@@ -92,3 +99,4 @@
 .rules-btn:hover {
   background-color: #1976d2;
 }
+

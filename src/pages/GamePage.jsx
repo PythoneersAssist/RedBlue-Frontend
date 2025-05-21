@@ -29,7 +29,7 @@ function GamePage() {
   const [opponentWantsChat, setOpponentWantsChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [showEndScreen, setShowEndScreen] = useState(false);
-  const [lastResult, setLastResult] = useState('');
+  const [roundHistory, setRoundHistory] = useState([]);
 
   const gameSocketRef = useRef(null);
   const chatSocketRef = useRef(null);
@@ -88,6 +88,20 @@ function GamePage() {
           setResult(`You chose ${colorNames[data.choice[index]]} and opponent chose ${colorNames[data.choice[opponentIndex]]}`);
           setWaitingForOpponent(false);
           setChoiceMade(true);
+
+          const myChoice = parseInt(data.choice[index]);
+          const opponentChoice = parseInt(data.choice[1 - index]);
+          const myScore = data.score[index];
+
+          setRoundHistory(prev => [
+            ...prev,
+            {
+              round: data.round,
+              myChoice,
+              opponentChoice,
+              myScore
+            }
+          ]);
 
           setTimeout(() => {
             if (round < 10) {
@@ -252,11 +266,28 @@ function GamePage() {
 
   return (
     <div className="game-container">
-      <div className="game-code-banner">
-        Game Code: <span className="game-code" onClick={() => {
-          navigator.clipboard.writeText(gameCode);
-          alert("Copied!");
-        }}>{gameCode}</span>
+      <div className="top-bar">
+        <div className="game-code-banner">
+          Game Code: <span className="game-code" onClick={() => {
+            navigator.clipboard.writeText(gameCode);
+            alert("Copied!");
+          }}>{gameCode}</span>
+        </div>
+      </div>
+      <div className="round-history">
+        <h3>📜 Round History</h3>
+        <ul>
+          {roundHistory.map((entry, i) => {
+            const colorNames = ['🔴 RED', '🔵 BLUE'];
+            return (
+              <li key={i}>
+                <strong>Round {entry.round}:</strong> You chose {colorNames[entry.myChoice]}, 
+                Opponent chose {colorNames[entry.opponentChoice]}, 
+                Score: {entry.myScore >= 0 ? `+${entry.myScore}` : entry.myScore}
+              </li>
+            );
+          })}
+        </ul>
       </div>
       <div className="scoreboard">
         <div>{myName || 'You'}: {playerScore}</div>
