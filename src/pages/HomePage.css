@@ -1,21 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,400,700&display=swap');
+
 /* Fullscreen layout */
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+}
+
 .homepage-container {
   height: 100vh;
-  background-color: #000;
+  background: #de2828;
+  background: linear-gradient(90deg, rgba(120, 20, 27, 1) 0%, rgba(115, 15, 101, 1) 50%, rgba(22, 146, 171, 1) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+  height: auto;
+}
+
 /* Card container */
 .card {
-  background-color: #1e1e2f;
+  position: relative;
+  background: rgba(20, 80, 80, 0.1);
+  backdrop-filter: blur(3px) saturate(80%);
+  -webkit-backdrop-filter: blur(6px) saturate(60%);
+  box-shadow: 0 8px 32px 0 rgba(15, 15, 15, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+  border-radius: 30px;
+  border-top-left-radius: 0;
   text-align: center;
   width: 90%;
   max-width: 500px;
+}
+
+/* Pseudo-element to hide the border in the top-left where the tabs are */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 120px; /* Adjust width as needed */
+  height: 40px; /* Adjust height as needed */
+  background: rgba(20, 80, 80, 0.1);
+  /* Remove any border overlap */
+  z-index: 1;
 }
 
 /* Title */
@@ -46,30 +81,35 @@
   border: none;
   border-radius: 12px;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   color: white;
 }
 
 .create-btn {
-  background-color: #7e22ce;
+  background-color: #2196f3;
 }
 
 .create-btn:hover {
-  background-color: #9333ea;
+  background-color: #1976d2;
 }
 
 .join-btn {
-  background-color: #6b21a8;
+  background-color: #2196f3;
 }
 
 .join-btn:hover {
-  background-color: #7e22ce;
+  background-color: #1976d2;
 }
 
 /* Input */
 .input {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px) saturate(120%);
+  box-shadow: 0 2px 12px 0 rgba(15, 15, 15, 0.15);
+  outline: 2px solid transparent;
+  transition: box-shadow 0.2s, outline 0.2s;
   color: white;
   width: 100%;
   padding: 14px;
@@ -87,6 +127,9 @@
 }
 
 .rules-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   margin-top: 1rem;
   padding: 0.5rem 1rem;
   background-color: #2196f3;
@@ -100,3 +143,51 @@
   background-color: #1976d2;
 }
 
+.footer {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .rules-btn {
+    top: 10px;
+    bottom: unset;
+  }
+}
+
+/* Ensure the card container is positioned relatively so tabs can be positioned absolutely */
+.card {
+  position: relative;
+}
+
+.card-tabs {
+  position: absolute;
+  top: -38px; /* Adjust this value to control how far the tabs extend above the card */
+  left: -1px;
+  display: flex;
+  gap: 5px;
+  color: white;
+}
+
+/* Style for each tab button */
+.card-tabs button {
+  padding: 8px 16px;
+  background: rgba(20, 80, 80, 0.1);
+  backdrop-filter: blur(3px) saturate(80%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: none; /* Connects with the card’s border */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Active tab style */
+.card-tabs button.active {
+  background: rgba(120, 120, 120, 0.1);
+  font-weight: bold;
+}

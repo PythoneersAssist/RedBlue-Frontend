@@ -1,97 +1,112 @@
-  .game-container {
-      height: 100vh;
-      background-color: black;
-      color: white;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+.game-container {
+    background: linear-gradient(
+      to right,
+      rgba(222, 40, 40, 0.6) 0%,
+      rgba(222, 40, 40, 0.6) calc(50% - 1px),
+      white calc(50% - 1px),
+      rgba(49, 161, 247, 0.6) calc(50% + 1px),
+      rgba(49, 161, 247, 0.6) 100%
+    );
+    background-color: rgba(0, 0, 0);
+    height: 100vh;
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-  .top-bar {
-    display: flex;
-    justify-content: flex-start;
-    padding: 0.5rem 1rem;
-  }
-  
-  .scoreboard {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 400px;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .round {
-    font-size: 28px;
-    margin-bottom: 30px;
-    color: #a855f7;
-  }
-  
-  .choices {
-    display: flex;
-    gap: 30px;
-  }
-  
-  .red-btn, .blue-btn {
-    font-size: 20px;
-    padding: 15px 30px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-  }
-  
-  .red-btn {
-    background-color: #dc2626;
-    color: white;
-  }
-  
-  .red-btn:hover {
-    background-color: #b91c1c;
-  }
-  
-  .blue-btn {
-    background-color: #2563eb;
-    color: white;
-  }
-  
-  .blue-btn:hover {
-    background-color: #1d4ed8;
-  }
-  
-  .result {
-    text-align: center;
-    max-width: 500px;
-  }
-  
-  .next-btn {
-    margin-top: 20px;
-    background-color: #7e22ce;
-    color: white;
-    padding: 10px 20px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .next-btn:hover {
-    background-color: #9333ea;
-  }
-  .discussion-box, .chat-box {
-    background-color: #222;
-    padding: 20px;
-    border-radius: 12px;
-    margin-top: 30px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-  }
-  
+.top-bar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 400px;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.round {
+  background-color: white;
+  border-radius: 20px;
+  position: fixed;
+  top: 45px;
+  font-size: 28px;
+  font-weight: 300;
+  width: 200px;
+  text-align: center;
+  color: black;
+}
+
+.choices {
+  display: flex;
+  gap: 4.5rem;
+}
+
+.red-btn, .blue-btn {
+  font-size: 20px;
+  padding: 15px 30px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  width: min(250px, 25vw);
+}
+
+.red-btn {
+  background-color: #dc2626;
+  color: white;
+}
+
+.red-btn:hover {
+  background-color: #b91c1c;
+}
+
+.blue-btn {
+  background-color: #2563eb;
+  color: white;
+}
+
+.blue-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.result {
+  text-align: center;
+  max-width: 500px;
+}
+
+.next-btn {
+  margin-top: 20px;
+  background-color: #7e22ce;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.next-btn:hover {
+  background-color: #9333ea;
+}
+.discussion-box, .chat-box {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
 .discussion-box,
 .chat-box {
   background-color: #222;
@@ -121,26 +136,29 @@
 }
 
 .end-screen {
-    background-color: #1e1e2f;
+    background: rgba(30, 30, 30, 0.3);
+    backdrop-filter: blur(4px) saturate(120%);
     padding: 30px;
     border-radius: 20px;
     margin-top: 30px;
     text-align: center;
     box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
     color: white;
+    position: fixed;
+    top: 50%;
   }
   
-  .end-screen h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #a855f7;
-  }
-  
-  .end-screen p {
-    font-size: 20px;
-    margin: 10px 0;
-  }
-  
+.end-screen h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #a855f7;
+}
+
+.end-screen p {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
 .discussion-buttons {
   display: flex;
   gap: 1rem;
@@ -178,6 +196,9 @@
 }
 
 .game-code-banner {
+  bottom: 20px;
+  left: 20px;
+  position: fixed;
   font-weight: bold;
   font-size: 1rem;
 }
@@ -200,4 +221,40 @@
   overflow-y: auto;
   color: black;
   font-size: 1rem;
+  position: fixed;
+  top: 90px;
+}
+
+.player1 {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  font-weight: 700;
+  font-size: 3rem;
+}
+
+.player2 {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  font-weight: 700;
+  font-size: 3rem; 
+}
+
+@media (max-width: 768px) {
+  .player1 {
+    font-size: 1.5rem;
+  }
+  .player2 {
+    font-size: 1.5rem;
+  }
+  .round {
+    top: unset;
+    bottom: 50px;
+  }
+
+  .round-history {
+    top: unset;
+    bottom: 80px;
+  }
 }

@@ -1,0 +1,24 @@
+.error-modal {
+    position: fixed;
+    background-color: rgba(224, 72, 72, 1);
+    border-radius: 8px;
+    padding: 20px;
+    top: 20px;
+    right: 20px;
+    width: auto;
+    height: auto;
+    justify-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    /* Text color */
+    color: white;
+    /* Change font to something cooler from google fonts*/
+    font-family: 'Roboto', sans-serif;
+}
+
+.title-error {
+    position: relative;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    justify-self: center;
+}

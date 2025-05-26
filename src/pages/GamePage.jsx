@@ -104,8 +104,8 @@ function GamePage() {
           ]);
 
           setTimeout(() => {
-            if (round < 10) {
-              setRound(prev => prev + 1);
+            if (data.round < 10) {
+              setRound(data.round + 1);
               setResult('');
               setChoiceMade(false);
               setWaitingForOpponent(false);
@@ -115,6 +115,18 @@ function GamePage() {
           }, 4000);
         }
         if (data.event === 'game_over') {
+          if (data.scores && typeof data.scores === 'object') {
+            // Find your and opponent's scores by name
+            const myScore = data.scores[playerName];
+            // Find opponent name (the other key in scores)
+            const opponentNameKey = Object.keys(data.scores).find(name => name !== playerName);
+            const oppScore = data.scores[opponentNameKey];
+
+            setPlayerScore(myScore);
+            setOpponentScore(oppScore);
+
+            setOpponentName(opponentNameKey);
+          }
           setShowEndScreen(true);
         }
         if (data.event === 'game_round_wfp') {
@@ -290,8 +302,8 @@ function GamePage() {
         </ul>
       </div>
       <div className="scoreboard">
-        <div>{myName || 'You'}: {playerScore}</div>
-        <div>{opponentName || 'Waiting...'}: {opponentScore}</div>
+        <div className="player1">{myName || 'You'}: {playerScore}</div>
+        <div className="player2">{opponentName || 'Waiting...'}: {opponentScore}</div>
       </div>
           {!showEndScreen && (
         <>
