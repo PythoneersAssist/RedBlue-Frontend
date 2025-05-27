@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './HomePage.css';
-import RulesModal from './RulesModal';
-import ErrorModal from './ErrorModal';
+import React, { useState } from 'react'; //for component and state management
+import { useNavigate } from 'react-router-dom'; //for navigation between pages
+import axios from 'axios'; //for making HTTP requests to the backend
+import './HomePage.css'; //for styling the HomePage component
+import RulesModal from './RulesModal'; //for displaying game rules in a modal
+import ErrorModal from './ErrorModal'; //for displaying error messages in a modal
 
 function HomePage() {
-  const navigate = useNavigate();
-  const [gameCode, setGameCode] = useState('');
-  const [playerName, setPlayerName] = useState('');
-  const [showRules, setShowRules] = useState(false);
+  const navigate = useNavigate(); //for navigating to different routes
+  const [gameCode, setGameCode] = useState(''); //for storing the game code input by the user
+  const [playerName, setPlayerName] = useState(''); //for storing the player's name input by the user
+  const [showRules, setShowRules] = useState(false); //for toggling the visibility of the rules modal
+  const [showError, setShowError] = useState(false); //for toggling the visibility of the error modal
+  const [errorMessage, setErrorMessage] = useState('Unexpected error occurred. Please try again later.'); //for storing the error message to be displayed in the error modal
 
-  const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('Unexpected error occurred. Please try again later.');
-
+  // Automatically hide the error message after 5 seconds
   if (showError) {
-    setTimeout(() => setShowError(false), 5000);
+    setTimeout(() => setShowError(false), 5000); 
   }
+
+  // Function to handle creating a new game
   const handleCreateGame = async () => {
     if (!playerName.trim()) {
       setShowError(true);
@@ -38,6 +40,7 @@ function HomePage() {
     }
   };
 
+  // Function to handle joining an existing game
   const handleJoinGame = async () => {
   if (!gameCode.trim() || !playerName.trim()) {
     setShowError(true);
